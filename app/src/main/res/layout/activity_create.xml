@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_text"
+        android:layout_gravity="top"
+        android:background="@null"
+        android:hint="写点什么吧..."/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="100dp"
+            android:id="@+id/createImage"
+            android:background="@drawable/camera"/>
+
+        <Button
+            android:id="@+id/createVideo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/video" />
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="250dp"
+            android:id="@+id/add_img"
+            android:visibility="gone"/>
+
+        <VideoView
+            android:layout_width="200dp"
+            android:layout_height="250dp"
+            android:id="@+id/add_video"
+            android:visibility="gone"/>
+    </LinearLayout>
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/save"
+            android:text="保存"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/cancel"
+            android:text="取消"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>

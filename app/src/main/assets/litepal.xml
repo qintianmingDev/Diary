@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value = "diaryDB"/>
 
     <version value = "1"/>
 
     <list>
-        <mapping class = "com.example.qtm.diary.db.diaryDB"/>
+        <mapping class = "com.example.qtm.diary.db.DiaryDB"/>
     </list>
 </litepal>
