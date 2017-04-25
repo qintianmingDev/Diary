@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/createtoolbar"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"></android.support.v7.widget.Toolbar>
 
     <EditText
         android:layout_width="match_parent"
@@ -12,25 +21,6 @@
         android:background="@null"
         android:hint="写点什么吧..."/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="100dp"
-            android:id="@+id/createImage"
-            android:background="@drawable/camera"/>
-
-        <Button
-            android:id="@+id/createVideo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="50dp"
-            android:background="@drawable/video" />
-    </LinearLayout>
-    
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,16 +48,18 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/save"
-            android:text="保存"
+            android:id="@+id/createImage"
+            android:text="拍照"
             android:layout_weight="1"/>
 
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/cancel"
-            android:text="取消"
+            android:id="@+id/createVideo"
+            android:text="摄像"
             android:layout_weight="1"/>
+
+
     </LinearLayout>
 
 </LinearLayout>

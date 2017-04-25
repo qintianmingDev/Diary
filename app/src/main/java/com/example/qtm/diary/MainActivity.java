@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.qtm.diary.db.DiaryDB;
 
@@ -20,21 +19,28 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private DiaryDB diaryDB;
     private ListView listView;
+    private String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        value = getIntent().getStringExtra("flag");
         listView = (ListView)findViewById(R.id.list);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.maintoolbar);
         LitePal.getDatabase();
         setSupportActionBar(toolbar);
 
         diaryDB = new DiaryDB();
     }
+//    public void initView(){
+//        if (value.equals("1")){
+//
+//        }
+//    }
 
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.toolbar,menu);
+        getMenuInflater().inflate(R.menu.maintoolbar,menu);
         return true;
     }
 

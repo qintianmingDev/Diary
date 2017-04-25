@@ -10,6 +10,8 @@ public class DiaryDB extends DataSupport {
     private int Id;
     private String Time;
     private String Content;
+    private String Path;
+
 
     public int getId() {
         return Id;
@@ -34,5 +36,13 @@ public class DiaryDB extends DataSupport {
 
     public void setContent(String content) {
         Content = content;
+    }
+
+    public String getPath() {
+        return Path;
+    }
+
+    public void setPath(String path) {
+        Path = path;
     }
 }
