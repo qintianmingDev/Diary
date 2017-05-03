@@ -8,17 +8,26 @@ import org.litepal.crud.DataSupport;
 
 public class DiaryDB extends DataSupport {
     private int Id;
+    private String Name;
     private String Time;
     private String Content;
     private String Path;
+    private String Video;
 
+    public String getVideo() {
+        return Video;
+    }
+
+    public void setVideo(String video) {
+        this.Video = video;
+    }
 
     public int getId() {
         return Id;
     }
 
     public void setId(int id) {
-        Id = id;
+       this.Id = id;
     }
 
     public String getTime() {
@@ -26,7 +35,7 @@ public class DiaryDB extends DataSupport {
     }
 
     public void setTime(String time) {
-        Time = time;
+        this.Time = time;
     }
 
 
@@ -35,7 +44,7 @@ public class DiaryDB extends DataSupport {
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.Content = content;
     }
 
     public String getPath() {
@@ -43,6 +52,14 @@ public class DiaryDB extends DataSupport {
     }
 
     public void setPath(String path) {
-        Path = path;
+        this.Path = path;
+    }
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
     }
 }

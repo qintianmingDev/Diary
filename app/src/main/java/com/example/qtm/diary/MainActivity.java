@@ -2,13 +2,17 @@ package com.example.qtm.diary;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.qtm.diary.Adapater.MyAdapter;
 import com.example.qtm.diary.db.DiaryDB;
 
 import org.litepal.LitePal;
@@ -17,27 +21,36 @@ import org.litepal.crud.DataSupport;
 public class MainActivity extends AppCompatActivity {
 
     private MyAdapter adapter;
-    private DiaryDB diaryDB;
     private ListView listView;
-    private String value;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        value = getIntent().getStringExtra("flag");
         listView = (ListView)findViewById(R.id.list);
         Toolbar toolbar = (Toolbar)findViewById(R.id.maintoolbar);
         LitePal.getDatabase();
         setSupportActionBar(toolbar);
-
-        diaryDB = new DiaryDB();
+        cursor = DataSupport.findBySQL("select * from DiaryDB");
+        initView();
     }
-//    public void initView(){
-//        if (value.equals("1")){
-//
-//        }
-//    }
+
+    public void initView(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                cursor.moveToPosition(position);
+                Intent intent = new Intent(MainActivity.this,SelectedActivity.class);
+                intent.putExtra("id",cursor.getInt(cursor.getColumnIndex("id")));
+                intent.putExtra("content",cursor.getString(cursor.getColumnIndex("content")));
+                intent.putExtra("time",cursor.getString(cursor.getColumnIndex("time")));
+                intent.putExtra("path",cursor.getString(cursor.getColumnIndex("path")));
+                intent.putExtra("video",cursor.getString(cursor.getColumnIndex("video")));
+                startActivity(intent);
+            }
+        });
+    }
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.maintoolbar,menu);

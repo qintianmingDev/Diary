@@ -5,11 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,19 +20,18 @@ import android.widget.VideoView;
 
 import com.example.qtm.diary.db.DiaryDB;
 
-import org.litepal.LitePal;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CreateActivity extends AppCompatActivity implements View.OnClickListener{
-    private String value;
-    public File file;
-
+    public File imgFile;
+    public File videoFile;
+    public static final int TAKE_PHOTO = 1;
+    public static final int TAKE_VIDEO = 2;
+    private Uri imageUri;
+    private Uri videoUri;
     private Button createImg;
     private Button createVideo;
     private EditText editText;
@@ -47,7 +45,6 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_create);
         Toolbar toolbar = (Toolbar)findViewById(R.id.createtoolbar);
         setSupportActionBar(toolbar);
-        value = getIntent().getStringExtra("flag");
         createImg = (Button)findViewById(R.id.createImage);
         createVideo = (Button)findViewById(R.id.createVideo);
         editText = (EditText)findViewById(R.id.edit_text);
@@ -56,7 +53,6 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
         createImg.setOnClickListener(this);
         createVideo.setOnClickListener(this);
         diaryDB = new DiaryDB();
-       // initView();
     }
 
 
@@ -77,35 +73,53 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
         return true;
     }
 
-    public void initView(){
-        //判断传入的flag
-        if (value.equals("1")){
-            addImage.setVisibility(View.VISIBLE);
-            addVideo.setVisibility(View.GONE);
-        }
-        if (value.equals("2")){
-            addImage.setVisibility(View.GONE);
-            addVideo.setVisibility(View.VISIBLE);
-        }
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             //调用系统相机，将拍摄的照片显示在imageview上
             case R.id.createImage:
+                //创建file对象，存储拍摄的照片
+                imgFile = new File(getExternalCacheDir(),getCurrentTime()+ "jpg");
+                try{
+                    if (imgFile.exists()){
+                        imgFile.delete();
+                    }
+                    imgFile.createNewFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                //系统低于7.0就用fromfile将File对象转换成uri对象
+                if (Build.VERSION.SDK_INT >= 24){
+                    imageUri = FileProvider.getUriForFile(CreateActivity.this,"com.example.qtm.diary.fileprovider",imgFile);
+                }else {
+                    imageUri = Uri.fromFile(imgFile);
+                }
                 Intent intentImg = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //获取绝对路径
-                file = new File(Environment.getExternalStorageDirectory().getAbsoluteFile()+ "/" + getCurrentTime()+ "jpg");
-                intentImg.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                intentImg.putExtra("flag",1);
-                startActivityForResult(intentImg,1);
+                intentImg.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intentImg,TAKE_PHOTO);
                 break;
             //调用系统摄像机，将拍摄的视频显示在videoview上
             case R.id.createVideo:
-                Intent intentVideo = new Intent();
-                intentVideo.putExtra("flag",2);
-                startActivity(intentVideo);
+                //创建file对象，存储拍摄的照片
+                videoFile = new File(getExternalCacheDir(),getCurrentTime()+ "mp4");
+                try{
+                    if (videoFile.exists()){
+                        videoFile.delete();
+                    }
+                    videoFile.createNewFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                //系统低于7.0就用fromfile将File对象转换成uri对象
+                if (Build.VERSION.SDK_INT >= 24){
+                    videoUri = FileProvider.getUriForFile(CreateActivity.this,"com.example.qtm.diary.fileprovider",videoFile);
+                }else {
+                    videoUri = Uri.fromFile(videoFile);
+                }
+                Intent intentVideo = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
+                startActivityForResult(intentVideo,TAKE_VIDEO);
                 break;
             default:
         }
@@ -115,7 +129,8 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
     public void addDB(){
         diaryDB.setContent(editText.getText().toString());
         diaryDB.setTime(getCurrentTime());
-        //diaryDB.setPath(file.getPath());
+        diaryDB.setPath(imgFile+"");
+        diaryDB.setVideo(videoFile+"");
         diaryDB.save();
     }
 
@@ -129,13 +144,31 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            try{
-                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                addImage.setImageBitmap(bitmap);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        switch (requestCode){
+            case TAKE_PHOTO:
+                if (resultCode == RESULT_OK){
+                    try{
+                        //显示拍摄的照片
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                        addImage.setImageBitmap(bitmap);
+                        addImage.setVisibility(View.VISIBLE);
+                        addVideo.setVisibility(View.GONE);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            case TAKE_VIDEO:
+                if (resultCode == RESULT_OK) {
+                    //显示拍摄的视频
+                    addVideo.setVideoURI(videoUri);
+                    addVideo.start();
+                    addImage.setVisibility(View.GONE);
+                    addVideo.setVisibility(View.VISIBLE);
+
+                }
+            default:
+                break;
         }
     }
 }
