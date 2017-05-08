@@ -8,7 +8,6 @@ import org.litepal.crud.DataSupport;
 
 public class DiaryDB extends DataSupport {
     private int Id;
-    private String Name;
     private String Time;
     private String Content;
     private String Path;
@@ -55,11 +54,4 @@ public class DiaryDB extends DataSupport {
         this.Path = path;
     }
 
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
 }

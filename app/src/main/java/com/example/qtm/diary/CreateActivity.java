@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -39,6 +40,9 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
     private VideoView addVideo;
     private DiaryDB diaryDB;
 
+    /*
+    * 初始化控件及变量
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,21 +57,33 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
         createImg.setOnClickListener(this);
         createVideo.setOnClickListener(this);
         diaryDB = new DiaryDB();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.back);
+        }
     }
-
-
+    /*
+    * 引入toolbar
+    * */
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.createtoolbar,menu);
         return true;
     }
-
+/*
+* toolbar上的点击事件
+* */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+//            保存
             case R.id.save:
                 addDB();
                 finish();
                 break;
+            case android.R.id.home:
+//                返回
+                finish();
             default:
         }
         return true;
@@ -91,7 +107,8 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 //系统低于7.0就用fromfile将File对象转换成uri对象
                 if (Build.VERSION.SDK_INT >= 24){
-                    imageUri = FileProvider.getUriForFile(CreateActivity.this,"com.example.qtm.diary.fileprovider",imgFile);
+                    imageUri = FileProvider.getUriForFile(CreateActivity.this,"" +
+                            "com.example.qtm.diary.fileprovider",imgFile);
                 }else {
                     imageUri = Uri.fromFile(imgFile);
                 }
@@ -113,7 +130,8 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
                 }
                 //系统低于7.0就用fromfile将File对象转换成uri对象
                 if (Build.VERSION.SDK_INT >= 24){
-                    videoUri = FileProvider.getUriForFile(CreateActivity.this,"com.example.qtm.diary.fileprovider",videoFile);
+                    videoUri = FileProvider.getUriForFile(CreateActivity.this,
+                            "com.example.qtm.diary.fileprovider",videoFile);
                 }else {
                     videoUri = Uri.fromFile(videoFile);
                 }
@@ -125,7 +143,7 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-
+/*保存数据的方法*/
     public void addDB(){
         diaryDB.setContent(editText.getText().toString());
         diaryDB.setTime(getCurrentTime());
@@ -149,7 +167,8 @@ public class CreateActivity extends AppCompatActivity implements View.OnClickLis
                 if (resultCode == RESULT_OK){
                     try{
                         //显示拍摄的照片
-                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().
+                                openInputStream(imageUri));
                         addImage.setImageBitmap(bitmap);
                         addImage.setVisibility(View.VISIBLE);
                         addVideo.setVisibility(View.GONE);

@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/selectedtoolbar"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    </android.support.design.widget.AppBarLayout>
 
 
     <ImageView
         android:layout_width="300dp"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         android:id="@+id/selected_img"
         android:visibility="gone"/>
 
     <VideoView
         android:layout_width="300dp"
-        android:layout_height="500dp"
+        android:layout_height="400dp"
         android:id="@+id/selected_video"
         android:visibility="gone"/>
 
-    <TextView
+    <EditText
         android:id="@+id/selected_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,6 +60,5 @@
             android:text="返回"
             android:layout_weight="1"/>
     </LinearLayout>
-
 
 </LinearLayout>

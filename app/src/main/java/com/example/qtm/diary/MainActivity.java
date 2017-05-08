@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter adapter;
     private ListView listView;
     private Cursor cursor;
+    private DiaryDB diaryDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +32,21 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.list);
         Toolbar toolbar = (Toolbar)findViewById(R.id.maintoolbar);
         LitePal.getDatabase();
+        diaryDB = new DiaryDB();
         setSupportActionBar(toolbar);
         cursor = DataSupport.findBySQL("select * from DiaryDB");
-        initView();
+        changeView();
     }
 
-    public void initView(){
+     /*点击每一个item的事件*/
+    public void changeView(){
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cursor.moveToPosition(position);
                 Intent intent = new Intent(MainActivity.this,SelectedActivity.class);
+                //获取SelectedActivity中传过来的content
+                diaryDB.setContent(getIntent().getStringExtra("content"));
                 intent.putExtra("id",cursor.getInt(cursor.getColumnIndex("id")));
                 intent.putExtra("content",cursor.getString(cursor.getColumnIndex("content")));
                 intent.putExtra("time",cursor.getString(cursor.getColumnIndex("time")));
@@ -70,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     public void queryDB(){
         Cursor cursor = DataSupport.findBySQL("select * from DiaryDB");
